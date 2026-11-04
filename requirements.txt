@@ -1,0 +1,43 @@
+# Unified VLA Base Model Sanity Check + VLA Training Framework
+# Python >= 3.10 (required by the bundled SAM2 source)
+
+# Core
+torch>=2.5.1
+torchvision>=0.20.1
+transformers>=4.57.0,<5.0
+accelerate>=0.27.0
+pytorch-lightning>=2.0.0
+
+# Data & Vision
+numpy>=1.24.0
+pillow>=10.0.0
+PyYAML>=6.0
+scipy>=1.10.0
+einops>=0.7.0
+
+# NuScenes
+nuscenes-devkit>=1.1.9
+
+# InternVL tokenizer dependencies
+sentencepiece>=0.1.99
+tiktoken>=0.5.0
+protobuf>=4.25.0
+
+# SmolVLM2 specific
+num2words>=0.5.14
+
+# Deployment (ONNX / TensorRT)
+onnx>=1.16
+onnxruntime-gpu>=1.23.0
+tensorrt>=10.0,<11.0
+
+# SLAM trajectory visualization (tools/slam_trajectory_verify)
+mcap>=1.4.0
+mcap-ros2-support>=0.5.0
+opencv-python>=4.8.0
+matplotlib>=3.7.0
+
+# Bundled SAM2 source (vla/sam2)
+hydra-core>=1.3.2
+iopath>=0.1.10
+tqdm>=4.66.1

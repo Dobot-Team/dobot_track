@@ -1,0 +1,43 @@
+# VLA sample synchronization configuration
+
+# Reference camera topic (all other data is aligned to this)
+ref_topic: /camera/camera/color/image_raw
+
+# Additional camera topics to include in each synced sample.
+# Each entry has a topic and a max acceptable offset in milliseconds.
+# Window should be slightly larger than half the camera's period.
+extra_camera_topics:
+  - topic: /camera/camera/infra1/image_rect_raw
+    window_ms: 30
+  - topic: /camera/camera/infra2/image_rect_raw
+    window_ms: 35
+  - topic: /camera/camera0/image_compressed
+    window_ms: 15
+  - topic: /camera/camera2/image_compressed
+    window_ms: 40
+
+# Non-camera sensor topics to synchronize.
+# Pointcloud is required; if missing the sample is dropped.
+sensor_topics:
+  - topic: /livox_Lidar_node/xyz/pointcloud
+    window_ms: 100
+    required: true
+  - topic: /camera/camera/imu
+    window_ms: 20
+    required: false
+  - topic: /livox_Lidar_node/imu/raw_data
+    window_ms: 20
+    required: false
+  - topic: /lower/state
+    window_ms: 10
+    required: false
+  - topic: /lower/cmd
+    window_ms: 10
+    required: false
+
+# Directories (relative to project root or absolute)
+# If omitted, the script defaults are used.
+# image_output_dir: output/images
+# pointcloud_output_dir: output/pointclouds
+# imu_output_dir: output/imu
+# output_dir: output/synced_vla_samples

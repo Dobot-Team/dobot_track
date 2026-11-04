@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mcap-processor"
+version = "0.1.0"
+description = "A Python project for processing ROS2 MCAP bag files"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "mcap>=1.4.0",
+    "mcap-ros2-support>=0.5.0",
+    "numpy>=1.24.0",
+    "opencv-python-headless>=4.8.0",
+    "pandas>=2.0.0",
+    "matplotlib>=3.7.0",
+    "pyyaml>=6.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project.scripts]
+mcap-inspect = "scripts.01_inspect_bag:main"

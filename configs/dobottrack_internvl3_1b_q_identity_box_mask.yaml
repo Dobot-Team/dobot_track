@@ -1,0 +1,142 @@
+# Training configuration paired with 027014_ade0.076.ckpt:
+# 1B Joint16/Q-identity + Box before Action + Mask, simulation + real data.
+# Training hyperparameters are preserved. Paths below are repository-relative;
+# place the original frozen manifests and matching archives at those locations.
+# Joint mode is renamed to q_identity; Box-before-Action is fixed in code.
+# The x0.8 action coefficient is an evaluation setting, not a training parameter.
+model:
+  model_path: models/InternVL3-1B-hf
+  model_type: internvl3
+  num_queries: 8
+  freeze_vision: true
+  freeze_llm: false
+  freeze_mlp1: false
+  gradient_checkpointing: false
+  action_head_type: mlp6
+  action_head_dims:
+  - 512
+  - 3
+  dtype: bf16
+  attn_implementation: sdpa
+  sam2_config:
+    enabled: true
+    checkpoint: models/sam2/sam2.1_hiera_base_plus.pt
+    config_file: configs/sam2.1/sam2.1_hiera_b+.yaml
+    feature_size: 16
+    train_decoder: true
+    current_mask:
+      enabled: true
+      loss_weight: 0.001
+    future_masks:
+      num_frames: 0
+      frame_stride: 1
+      loss_weight: 0.001
+    use_high_res_features: true
+  history_compressor_config:
+    enabled: true
+    mode: q_identity
+    num_output_tokens: 16
+    num_layers: 3
+    num_heads: 8
+    dropout: 0.1
+    mask_patch_threshold: 0.4
+    box_embedding: false
+    hidden_size: 512
+    current_frame_qformer_probability: 0.3
+    current_frame_qformer_use_gt_mask: true
+    target_selection: bbox
+    bbox_visibility_threshold: 0.5
+    bbox_jitter_probability: 0.8
+    bbox_jitter_scale: 0.1
+    bbox_dropout_probability: 0.0
+  future_frame_config:
+    enabled: false
+    frame_offsets:
+    - 3
+    output_size: 64
+    fusion_dim: 256
+    num_heads: 4
+    decoder_channels: 128
+    dropout: 0.1
+    loss_weight: 0.1
+    temporal_difference_weight: 0.0
+    detach_planner_context: false
+  auxiliary_tasks_config:
+    grounding_enabled: true
+    vqa_enabled: false
+    grounding_loss_weight: 0.01
+    vqa_loss_weight: 0.01
+data:
+  dataset_type: trackvla
+  trackvla_sources:
+  - data/real_trackvla_allcurrent_h5_future10_p95_posefiltered/dataset.bbox_allcurrent_frozen_20261019.json
+  - data/sample/at_train_60/dataset.grounding_pool_20261012.json
+  - data/sample/dt_train_60/dataset.grounding_pool_20261012.json
+  - data/sample/stt_train_70/dataset.grounding_pool_20261012.json
+  - data/sample/dt_train_0.65/dataset.grounding_pool_20261012.json
+  num_history_frames: 8
+  history_frame_interval: 1
+  n_future: 8
+  trajectory_dim: 3
+  input_size: 448
+  batch_size: 32
+  num_workers: 4
+  val_split: 0.01
+  prompt: Predict the ego vehicle's future trajectory in the ego coordinate frame.
+  num_image_tokens: 256
+  max_length: 1200
+  seed: 42
+  index_cache_dir: cache/dobottrack_q_identity_box_mask_sim_real
+  max_open_archives: 32
+  history_mask_augmentation:
+    enabled: true
+    clean_probability: 0.2
+training:
+  lr: 2.0e-05
+  weight_decay: 0.001
+  optimizer_param_groups:
+  - name: llm
+    patterns:
+    - ^internvl\.language_model\.
+    lr: 2.0e-05
+  - name: sam_decoder
+    patterns:
+    - ^mask_auxiliary_head\.sam_model\.sam_mask_decoder\.
+    lr: 2.0e-05
+  - name: projector
+    patterns:
+    - ^internvl\.multi_modal_projector\.
+    lr: 4.0e-05
+  - name: other
+    patterns:
+    - .*
+    lr: 4.0e-05
+  adamw:
+    betas:
+    - 0.9
+    - 0.98
+    eps: 1.0e-08
+    amsgrad: false
+  onecycle:
+    cycle_momentum: false
+  warmup_steps: 100
+  max_steps: -1
+  yaw_weight: 2.0
+  x_weight: 1.0
+  y_weight: 3.0
+  gradient_clip_val: 1.0
+  accumulate_grad_batches: 1
+  val_check_interval: 1000
+  log_every_n_steps: 10
+trainer:
+  accelerator: gpu
+  devices: '8'
+  num_nodes: 1
+  strategy: ddp_find_unused_parameters_true
+  precision: bf16-mixed
+  max_epochs: 3
+  enable_checkpointing: true
+  save_top_k: 3
+  save_last: true
+  enable_progress_bar: false
+output_dir: outputs/dobottrack_internvl3_1b_q_identity_box_mask_sim_real

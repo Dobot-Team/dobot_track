@@ -1,0 +1,7 @@
+[submodule "third_party/dobot_quad_mapping"]
+	path = third_party/dobot_quad_mapping
+	url = git@gitee.com:inffni-robotics/dobot_quad_mapping.git
+	branch = vla_real_traj
+[submodule "third_party/device_static_params"]
+	path = third_party/device_static_params
+	url = git@gitee.com:inffni-robotics/device_static_params.git
