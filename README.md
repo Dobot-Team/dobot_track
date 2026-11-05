@@ -19,7 +19,7 @@ Pengkun Zheng<sup>3,†</sup>, Yajun Zheng<sup>3</sup>, Ying Zhang<sup>3</sup>, 
 
 **DobotTrack** follows a person specified by a natural-language appearance description. It combines complementary **mask and box supervision** with **Q-identity**, a target-grounded visual history compressor, to predict future egocentric waypoints from a temporal window of RGB observations.
 
-<img src="assets/paper/architecture.png" alt="DobotTrack architecture and Q-identity history compression" width="100%">
+<img src="assets/paper/architecture.png?v=0c838b036d31" alt="DobotTrack architecture and Q-identity history compression" width="100%">
 
 ## News
 
