@@ -185,11 +185,6 @@ node_modules/
 tmp/
 temp/
 
-# mcap_processor generated artifacts (large files)
-tools/mcap_processor/output/*
-!tools/mcap_processor/output/.gitkeep
-tools/mcap_processor/data/*
-!tools/mcap_processor/data/.gitkeep
 *.mcap
 
 # Local wheel packages (large binaries)
