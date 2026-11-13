@@ -1,0 +1,14 @@
+# Install in the desktop calibration environment, not over the pinned Orin runtime.
+# Explicit dependencies are listed rather than ModelOpt's older [onnx] extra pins.
+nvidia-modelopt==0.15.1
+onnx==1.17.0
+onnxruntime==1.19.2
+onnxruntime-extensions==0.12.0
+onnx-graphsurgeon==0.5.8
+onnxconverter-common==1.14.0
+onnxmltools==1.12.0
+cppimport==22.8.2
+Mako==1.3.5
+pybind11==2.13.6
+numpy>=1.24,<2
+setuptools<81
