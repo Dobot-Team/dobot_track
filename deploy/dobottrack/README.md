@@ -1,7 +1,7 @@
 # DobotTrack optimized deployment on Jetson Orin
 
 The **default `optimized` recipe** contains the complete low-latency path: native
-TensorRT INT8 Vision, FP16 physically Box-selected Joint QFormer, SmoothQuant W8A8
+TensorRT INT8 Vision, FP16 physically Box-selected Q-identity, SmoothQuant W8A8
 LLM with the included RMSNorm/quant CUDA plugin, persistent buffers, CPU prompt/Box
 caches and CUDA Graphs. It preserves the trained **Mask → Box → eight Action
 queries**. Mask decoding is skipped; its learned query remains in the LLM.
@@ -136,7 +136,7 @@ python deploy/dobottrack/build.py --work "$WORK"
 ```
 
 The default build compiles the included LLM plugin locally, builds the 132-MatMul
-Vision graph, compact FP16 QFormer and FP16 task heads, then builds the fused
+Vision graph, compact FP16 Q-identity and FP16 task heads, then builds the fused
 W8A8 LLM. It forces one context-only optimization profile. The physical target
 selection gathers Box-covered patch tokens into buckets 32/64/128/256, retaining
 no-target fallback/padding semantics. Query-only self-attention and full 256-token
@@ -162,12 +162,12 @@ python deploy/dobottrack/replay.py \
   --work "$WORK" --base "$BASE" --data "$DATA" --instrument
 ```
 
-Results are `replay_vision_attention_int8_qformer_compact_fp_no_mask.json` and
+Results are `replay_vision_attention_int8_qidentity_compact_fp_no_mask.json` and
 `*_stages.json`. Policy percentiles cover all measured decisions; ADE/FDE cover
 only validation episodes. Calibration-disjoint does **not** establish that data
 were unseen in training. These trajectory regression metrics are not Habitat SR.
 Replay timing includes RGB preprocessing, cached Vision/history assembly,
-QFormer, LLM, task heads and CPU postprocessing. It excludes model loading,
+Q-identity, LLM, task heads and CPU postprocessing. It excludes model loading,
 archive decoding and simulator or robot execution.
 The report contains CUDA Graph capture evidence. Optimized initialization fails
 if graph capture fails rather than silently timing an unfused fallback.
@@ -205,7 +205,7 @@ workflow above when the desktop and Orin have separate dependencies.
 
 The baseline path is available with `--recipe baseline`.
 Use that flag consistently for **export, build and replay**, in a separate work
-directory. It uses native FP16 Vision, dense FP16 QFormer and upstream W8A8 LLM;
+directory. It uses native FP16 Vision, dense FP16 Q-identity and upstream W8A8 LLM;
 Mask is decoded unless `replay.py --skip-mask-decoder` is passed. Baseline-only
 INT8 candidates are separate experiments, not the optimized release default.
 Never reuse templates, scales or engines across checkpoint/query-order changes.

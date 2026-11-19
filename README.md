@@ -4,8 +4,8 @@
 
 ### Target-Grounded Vision-Language-Action Learning for Embodied Person Tracking
 
-Shengjun Deng<sup>1</sup>, Yinghan Zhang<sup>2,*</sup>, Chengrui Wei<sup>3</sup>, Liu Liang<sup>3</sup>, Songyuan Liu<sup>3</sup><br>
-Pengkun Zheng<sup>3,†</sup>, Yajun Zheng<sup>3</sup>, Ying Zhang<sup>3</sup>, Yuan Tian<sup>3</sup>, Xi Li<sup>3</sup>, Teng Wang<sup>4,*</sup>
+Shengjun Deng<sup>1</sup>, Yinghan Zhang<sup>2,\*</sup>, Chengrui Wei<sup>3</sup>, Liu Liang<sup>3</sup>, Songyuan Liu<sup>3</sup><br>
+Pengkun Zheng<sup>3,†</sup>, Yajun Zheng<sup>3</sup>, Ying Zhang<sup>3</sup>, Yuan Tian<sup>3</sup>, Xi Li<sup>3</sup>, Teng Wang<sup>4,\*</sup>
 
 <sup>1</sup>Foshan University &nbsp; <sup>2</sup>Tsinghua University<br>
 <sup>3</sup>Dobot Robotics &nbsp; <sup>4</sup>The University of Hong Kong<br>
@@ -228,7 +228,7 @@ python -m torch.distributed.run --standalone --nproc-per-node=8 \
 
 ## 6. Deployment
 
-See [Jetson Orin deployment](deploy/dobottrack/README.md) for the default optimized workflow: native INT8 Vision, Box-selected Joint QFormer, fused W8A8 LLM and CUDA Graph streaming inference. The guide covers export, calibration, engine builds and causal replay.
+See [Jetson Orin deployment](deploy/dobottrack/README.md) for the default optimized workflow: native INT8 Vision, Box-selected Q-identity, fused W8A8 LLM and CUDA Graph streaming inference. The guide covers export, calibration, engine builds and causal replay.
 
 ## Results
 
@@ -255,7 +255,6 @@ Each cell is **SR ↑ / TR ↑ / CR ↓ (%)**. Multi-camera methods are referenc
 | ReferTrack | 4B | – | 89.4 / 92.5 / 1.6 | 73.3 / 81.8 / 7.6 | 74.1 / 85.7 / 7.7 |
 | **DobotTrack** | **0.8B** | – | **90.2 / 92.3 / 3.6** | **72.5 / 83.3 / 8.3** | **70.9 / 85.5 / 6.6** |
 
-The DobotTrack results are reported in the current manuscript; they are not yet bound to a public checkpoint and frozen evaluation configuration in this repository.
 
 ## Citation
 
